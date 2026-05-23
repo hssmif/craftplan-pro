@@ -1,0 +1,326 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   DARK THEME (default) — Etsy-inspired
+   Warm cream & clementine orange on deep espresso.
+   ───────────────────────────────────────────── */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* ── Warm Espresso Base ── */
+  --bg-base: #161310;
+  --bg-surface: #1f1a15;
+  --bg-elevated: #26201a;
+  --bg-hover: #2d261e;
+  --bg-inset: #120f0c;
+
+  /* ── Linen Borders ── */
+  --border-subtle: rgba(250, 246, 241, 0.07);
+  --border-default: rgba(250, 246, 241, 0.14);
+  --border-strong: rgba(250, 246, 241, 0.28);
+  --border-accent: rgba(241, 100, 30, 0.40);
+
+  /* ── Accent — Clementine Orange ── */
+  --accent-primary: #F1641E;
+  --accent-hover: #D94F0F;
+  --accent-soft: rgba(241, 100, 30, 0.14);
+  --accent-glow: rgba(241, 100, 30, 0.28);
+  --accent-secondary: #A61A0B;
+  --accent-contrast: #ffffff;
+
+  /* ── Text ── */
+  --text-primary: #FAF6F1;
+  --text-secondary: #C7BFB4;
+  --text-muted: #857E74;
+  --text-faint: #4D4740;
+  --text-page-title: #ffffff;
+
+  /* ── Status ── */
+  --green: #238948;
+  --yellow: #EDB430;
+  --red: #A61A0B;
+  --blue: #2B5DB8;
+  --purple: #6E4E8F;
+
+  /* ── Shadows ── */
+  --shadow-card: 0 4px 20px rgba(12, 8, 4, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 18px 48px -12px rgba(12, 8, 4, 0.7), 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 0 1px rgba(241, 100, 30, 0.18), 0 0 20px rgba(241, 100, 30, 0.22);
+
+  /* ── Radius Scale ── */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-pill: 9999px;
+
+  /* ── Transition ── */
+  --transition-fast: 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-base: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-slow: 380ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Legacy compat ── */
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+  --sidebar-bg: var(--bg-surface);
+  --sidebar-text: var(--text-primary);
+  --accent: var(--accent-primary);
+  --accent-hover-legacy: #D94F0F;
+  --card-bg: var(--bg-elevated);
+  --card-border: var(--border-default);
+  --success: var(--green);
+  --warning: var(--yellow);
+  --danger: var(--red);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-hover: var(--bg-hover);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent-primary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* ── Remap amber → Etsy clementine ── */
+  --color-amber-50:  #FDF5EC;
+  --color-amber-100: #FBE8D4;
+  --color-amber-200: #F7CDA4;
+  --color-amber-300: #F3AE73;
+  --color-amber-400: #F08A43;
+  --color-amber-500: #F1641E;
+  --color-amber-600: #D94F0F;
+  --color-amber-700: #B13D0A;
+  --color-amber-800: #8A2F09;
+  --color-amber-900: #6B2407;
+  --color-amber-950: #3F1503;
+
+  /* ── Remap all cool-tone palettes → Etsy clementine ──
+     Every bg-indigo-*, text-violet-*, border-purple-*, etc.
+     now renders in Etsy orange — one consistent brand. */
+  --color-purple-50:  #FDF5EC;
+  --color-purple-100: #FBE8D4;
+  --color-purple-200: #F7CDA4;
+  --color-purple-300: #F3AE73;
+  --color-purple-400: #F08A43;
+  --color-purple-500: #F1641E;
+  --color-purple-600: #D94F0F;
+  --color-purple-700: #B13D0A;
+  --color-purple-800: #8A2F09;
+  --color-purple-900: #6B2407;
+  --color-purple-950: #3F1503;
+
+  --color-indigo-50:  #FDF5EC;
+  --color-indigo-100: #FBE8D4;
+  --color-indigo-200: #F7CDA4;
+  --color-indigo-300: #F3AE73;
+  --color-indigo-400: #F08A43;
+  --color-indigo-500: #F1641E;
+  --color-indigo-600: #D94F0F;
+  --color-indigo-700: #B13D0A;
+  --color-indigo-800: #8A2F09;
+  --color-indigo-900: #6B2407;
+  --color-indigo-950: #3F1503;
+
+  --color-violet-50:  #FDF5EC;
+  --color-violet-100: #FBE8D4;
+  --color-violet-200: #F7CDA4;
+  --color-violet-300: #F3AE73;
+  --color-violet-400: #F08A43;
+  --color-violet-500: #F1641E;
+  --color-violet-600: #D94F0F;
+  --color-violet-700: #B13D0A;
+  --color-violet-800: #8A2F09;
+  --color-violet-900: #6B2407;
+  --color-violet-950: #3F1503;
+
+  --color-fuchsia-50:  #FDF5EC;
+  --color-fuchsia-100: #FBE8D4;
+  --color-fuchsia-200: #F7CDA4;
+  --color-fuchsia-300: #F3AE73;
+  --color-fuchsia-400: #F08A43;
+  --color-fuchsia-500: #F1641E;
+  --color-fuchsia-600: #D94F0F;
+  --color-fuchsia-700: #B13D0A;
+  --color-fuchsia-800: #8A2F09;
+  --color-fuchsia-900: #6B2407;
+  --color-fuchsia-950: #3F1503;
+}
+
+/* ── Global Base ── */
+* { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+html, body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans), 'Sora', Arial, Helvetica, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+body {
+  background-image:
+    radial-gradient(at 8% 0%, rgba(241, 100, 30, 0.04) 0%, transparent 45%),
+    radial-gradient(at 92% 100%, rgba(166, 26, 11, 0.02) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, .heading {
+  color: var(--text-page-title);
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+code, .mono, pre {
+  font-family: 'JetBrains Mono', var(--font-mono), monospace;
+}
+
+/* ── Page Transition ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: fadeInUp 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* ── Skeleton Shimmer ── */
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.65; }
+}
+.skeleton-pulse { animation: skeletonPulse 1.8s ease-in-out infinite; }
+
+/* ── Focus Ring — Etsy Orange ── */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(241, 100, 30, 0.35);
+  border-color: var(--accent-primary);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(241, 100, 30, 0.45);
+}
+
+/* ── Button Micro-Interactions ── */
+button:not(:disabled):active { transform: translateY(0.5px) scale(0.98); }
+
+/* ── Card Hover ── */
+.card-hover {
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+}
+.card-hover:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-hover);
+}
+
+/* ── Status Pulse ── */
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.82); }
+}
+.status-pulse { animation: statusPulse 2s ease-in-out infinite; }
+
+/* ── Counter Animation ── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stat-number { animation: countUp 0.4s ease forwards; }
+
+/* ── Shimmer Effect ── */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.shimmer-hover:hover .shimmer-bar { animation: shimmer 0.7s ease; }
+
+/* ── Sidebar ── */
+.sidebar-nav-item { position: relative; }
+
+/* ── Scrollbar — Warm ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 248, 235, 0.08);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 248, 235, 0.16); }
+
+/* ── Hidden Scrollbar ── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Confetti ── */
+.confetti-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 50;
+}
+
+/* ── Glass Card ── */
+.glass-card {
+  background: linear-gradient(135deg, rgba(28, 25, 23, 0.85), rgba(38, 35, 31, 0.92));
+  border: 1px solid rgba(255, 248, 235, 0.08);
+  border-radius: 14px;
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+/* ── Surface ── */
+.surface-premium {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+/* ── Orange Accent Card ── */
+.gradient-accent {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--accent-primary);
+}
+
+/* ── Dark Input Styling ── */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="url"],
+input[type="search"],
+input[type="password"],
+textarea,
+select {
+  background: var(--bg-inset) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-md) !important;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+input::placeholder, textarea::placeholder { color: var(--text-muted) !important; }
+
+/* ── Chip — Pill Tag ── */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.01em;
+  background: var(--bg-hover); color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+.chip-amber {
+  background: var(--accent-soft);
+  color: var(--accent-primary);
+  border-color: var(--border-accent);
+}
+
+/* ── Theme transition ── */
+html { transition: background-color 280ms ease, color 280ms ease; }
+body, aside, main, header, button, input, textarea, select, a {
+  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease;
+}

@@ -1,0 +1,95 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# === local databases (never commit) ===
+data/**/*.db
+data/**/*.db-shm
+data/**/*.db-wal
+data/**/*.sqlite
+data/**/*.sqlite-journal
+src/lib/*.db
+*.db
+*.db-shm
+*.db-wal
+
+# === generated product / image / video outputs ===
+data/outputs/
+data/digital-products/
+data/wall-art/
+data/shop-branding/
+data/factory-templates/
+data/planners/
+public/factory-videos/
+public/mockup-templates/
+public/video-assets/
+public/listing-video.mp4
+public/auto-pattern.json
+
+# === built extension artifacts (rebuild from src/extension/ and etsy-keyword-research/) ===
+public/extension/dist/
+
+# === local agent / chat state ===
+data/agent-command-center.json
+data/strategist-chat.json
+.claude/
+
+# === logs, backups, test scratch ===
+logs/
+backups/
+img-for-test/
+test-chick.png
+*.log
+
+# === python virtualenv & cache (pattern-engine) ===
+**/.venv/
+**/venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# === macOS / editor ===
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.shared.json

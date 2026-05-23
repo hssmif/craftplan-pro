@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "CraftPlan Research",
+  "version": "2.0.0",
+  "description": "Capture Etsy Marketplace Insights data while you browse, and surface real buyer-demand signals in CraftPlan's research tools.",
+  "permissions": ["activeTab", "storage", "scripting", "tabs"],
+  "host_permissions": [
+    "https://www.etsy.com/*",
+    "https://etsy.com/*",
+    "https://i.etsystatic.com/*",
+    "http://localhost:3461/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "dist/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.etsy.com/your/shops/me/marketplace-insights*",
+        "https://www.etsy.com/your/shops/*/marketplace-insights*"
+      ],
+      "js": ["dist/marketplace-insights-scanner.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "externally_connectable": {
+    "matches": ["http://localhost:3461/*"]
+  }
+}

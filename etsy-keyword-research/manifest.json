@@ -1,0 +1,75 @@
+{
+  "manifest_version": 3,
+  "name": "ListingView",
+  "version": "1.0.0",
+  "description": "Analyze Etsy listings, discover trending products, and research keywords — all from your browser.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "downloads",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.etsy.com/*",
+    "https://openapi.etsy.com/*",
+    "https://api.etsy.com/*",
+    "https://web.archive.org/*",
+    "http://localhost:*/*"
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "externally_connectable": {
+    "matches": ["http://localhost:*/*"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.etsy.com/*"],
+      "js": [
+        "src/shared/constants.js",
+        "src/shared/utils.js",
+        "src/shared/keywords.js",
+        "src/shared/analysis.js",
+        "src/shared/description-parser.js",
+        "src/shared/storage.js",
+        "src/content/detector.js",
+        "src/content/scraper-search.js",
+        "src/content/scraper-listing.js",
+        "src/content/scraper-shop.js",
+        "src/content/floating-tool.js",
+        "src/content/badge-injector.js",
+        "src/content/card-buttons.js",
+        "src/content/listing-stats.js",
+        "src/content/dashboard.js",
+        "src/content/content-main.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.etsy.com/your/shops/*/tools/listings/*"
+      ],
+      "js": ["src/content/etsy-form-filler.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["http://localhost:*/*"],
+      "js": ["src/content/craftplan-bridge.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
