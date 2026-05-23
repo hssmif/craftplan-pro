@@ -1,0 +1,115 @@
+name: AI Task
+description: File a task for the AI workflow system (Claude Code or Codex).
+title: "[AI] "
+labels: ["ai-task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to file a task that will be handled by the Claude + Codex workflow.
+        The Prompt Manager reads this issue, converts it into a professional prompt, and assigns the right agent.
+        Read `AI_SYSTEM/PROMPT_MANAGER_RULES.md` if you want to understand how this gets routed.
+
+  - type: dropdown
+    id: task_type
+    attributes:
+      label: Task Type
+      description: What kind of work is this?
+      options:
+        - Analysis / Investigation
+        - Plan / Architecture
+        - Implementation (small)
+        - Implementation (large — needs plan first)
+        - Bug Fix
+        - Refactor
+        - Code Review
+        - UI/UX Review
+        - Test / CI Fix
+        - Dependency / Build
+        - Docs
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: preferred_agent
+    attributes:
+      label: Preferred Agent
+      description: Who should handle this? Leave on "Let Prompt Manager decide" if unsure.
+      options:
+        - Let Prompt Manager decide
+        - Claude Code (planner / reviewer)
+        - Codex (implementer / fixer)
+        - Both (plan then implement)
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One sentence. What does "done" look like?
+      placeholder: e.g. "Etsy tag generator should produce 13 tags, each up to 20 chars, never truncated."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Background the agent needs. What you've tried, what you've ruled out, related Task IDs, recent incidents, design constraints.
+    validations:
+      required: false
+
+  - type: textarea
+    id: files_involved
+    attributes:
+      label: Files Involved
+      description: Files or directories the agent should read or change. One per line. Use globs only when the task is genuinely repo-wide.
+      placeholder: |
+        src/lib/etsy-client.ts
+        src/app/api/etsy/generate-listing/route.ts
+    validations:
+      required: false
+
+  - type: textarea
+    id: files_forbidden
+    attributes:
+      label: Files Forbidden
+      description: Anything off-limits beyond the always-forbidden list (.env*, lockfiles, CI, next.config.ts, data/*.db*).
+      placeholder: |
+        src/lib/etsy-auth.ts   # touched by another open task
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected_output
+    attributes:
+      label: Expected Output
+      description: What the agent should produce. PR with diff? Plan document? Review comments? Specify.
+    validations:
+      required: true
+
+  - type: textarea
+    id: testing_required
+    attributes:
+      label: Testing Required
+      description: Exact commands or manual steps that must pass before this is "done."
+      placeholder: |
+        pnpm typecheck
+        pnpm lint
+        Manual: open /etsy/draft, generate listing for niche "X", confirm 13 tags rendered with full text
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk_level
+    attributes:
+      label: Risk Level
+      description: Best guess. The Prompt Manager will reassess.
+      options:
+        - low — docs, isolated fix, no shared utilities
+        - medium — single-area feature or shared utility touch
+        - high — cross-cutting, schema, auth/payment, external API
+    validations:
+      required: true
