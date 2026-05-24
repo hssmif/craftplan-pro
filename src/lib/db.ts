@@ -805,10 +805,10 @@ function ensureEtsyInsightsSchema() {
   // first and only add missing columns. Safe on cold DBs (table just
   // created above — no columns to add) and on warm DBs (existing
   // columns are left alone).
-  const existingCols = new Set(
-    (db.prepare(`PRAGMA table_info(etsy_insights_terms)`).all() as Array<{ name: string }>)
-      .map((c) => c.name),
-  );
+  const hasColumn = (column: string) => {
+    const cols = db.prepare(`PRAGMA table_info(etsy_insights_terms)`).all() as Array<{ name: string }>;
+    return cols.some((c) => c.name === column);
+  };
   const newColumns: Array<[string, string]> = [
     ["growth_pct", "REAL"],
     ["search_results", "INTEGER"],
@@ -830,8 +830,15 @@ function ensureEtsyInsightsSchema() {
     ["classified_by", "TEXT"],
   ];
   for (const [name, type] of newColumns) {
-    if (!existingCols.has(name)) {
-      db.exec(`ALTER TABLE etsy_insights_terms ADD COLUMN ${name} ${type}`);
+    if (!hasColumn(name)) {
+      try {
+        db.exec(`ALTER TABLE etsy_insights_terms ADD COLUMN ${name} ${type}`);
+      } catch (err) {
+        if (err instanceof Error && /duplicate column name/i.test(err.message) && hasColumn(name)) {
+          continue;
+        }
+        throw err;
+      }
     }
   }
   db.exec(`CREATE INDEX IF NOT EXISTS idx_insights_normalized ON etsy_insights_terms(term_normalized)`);
