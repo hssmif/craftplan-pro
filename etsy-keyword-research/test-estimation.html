@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Estimation Pipeline Test</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; margin: 20px; background: #f9fafb; color: #030712; }
+    h2 { color: #667eea; margin-top: 24px; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    th { background: #f3f4f6; text-align: left; padding: 8px; font-size: 13px; border-bottom: 2px solid #e5e7eb; }
+    td { padding: 6px 8px; border-bottom: 1px solid #f3f4f6; font-size: 13px; }
+    .old { color: #c0123c; font-weight: 600; }
+    .new { color: #217005; font-weight: 600; }
+    .label { color: #6b7280; font-size: 11px; }
+    .src { font-size: 11px; color: #6b7280; font-style: italic; }
+    .conf-high { color: #217005; font-weight: 700; }
+    .conf-med { color: #935116; font-weight: 700; }
+    .conf-low { color: #6b7280; font-weight: 700; }
+    #output { white-space: pre-wrap; font-family: monospace; font-size: 13px; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb; }
+  </style>
+</head>
+<body>
+  <h1>Sales Estimation Pipeline — Verification</h1>
+  <div id="output">Loading scripts...</div>
+
+  <script src="src/shared/constants.js"></script>
+  <script src="src/shared/utils.js"></script>
+  <script src="src/shared/keywords.js"></script>
+  <script src="src/shared/analysis.js"></script>
+  <script>
+    var A = globalThis.EtsyAnalysis;
+    var out = document.getElementById('output');
+
+    if (!A) { out.textContent = 'ERROR: EtsyAnalysis not loaded'; }
+    else {
+      var tests = [
+        {
+          name: 'Bestseller + 20 Views + Known Age (JSON-LD)',
+          listing: { listing_id:'t1', title:'Bestseller Widget', price:25, reviews:12, rating:4.8, favorites:50, is_bestseller:true, views_24h:20, search_position:3, date_published:'2024-06-15', listing_age_source:'json-ld' }
+        },
+        {
+          name: 'Low Demand (No Views, No Age)',
+          listing: { listing_id:'t2', title:'Low Demand Item', price:10, reviews:3, rating:4.2, favorites:5, is_bestseller:false, views_24h:null, search_position:40 }
+        },
+        {
+          name: 'Viral Bestseller (High Everything, page-text age)',
+          listing: { listing_id:'t3', title:'Viral Hit', price:35, reviews:200, rating:4.9, favorites:500, is_bestseller:true, views_24h:50, search_position:1, date_published:'2024-01-01', listing_age_source:'page-text' }
+        },
+        {
+          name: 'New Listing (7d, no views, review-approx age)',
+          listing: { listing_id:'t4', title:'Brand New', price:15, reviews:0, rating:0, favorites:2, is_bestseller:false, views_24h:null, search_position:25, date_published: new Date(Date.now()-7*86400000).toISOString().slice(0,10), listing_age_source:'review-approx' }
+        },
+        {
+          name: 'Bestseller + Views but NO Age',
+          listing: { listing_id:'t5', title:'No Age Bestseller', price:25, reviews:60, rating:4.8, favorites:120, is_bestseller:true, views_24h:20, search_position:3 }
+        },
+      ];
+
+      var html = '';
+      for (var i = 0; i < tests.length; i++) {
+        var t = tests[i];
+        var l = t.listing;
+
+        // OLD formula for comparison
+        var oldMonthlySales = Math.max(1, Math.round((l.reviews || 0) / 12));
+        var oldRevenue = (l.price || 0) * oldMonthlySales;
+
+        A.enrichListing(l);
+
+        html += '<h2>' + t.name + '</h2>';
+        html += '<table>';
+        html += '<tr><th>Metric</th><th>OLD (Broken)</th><th>NEW (Fixed)</th></tr>';
+        html += '<tr><td>Daily Views</td><td class="old">N/A</td><td class="new">' + l.daily_views + (l.views_24h ? ' (ACTUAL)' : ' (est)') + '</td></tr>';
+        html += '<tr><td>Conversion Rate</td><td class="old">' + (l.favorites > 0 ? ((l.reviews/l.favorites)*100).toFixed(1) : 'null') + '%</td><td class="new">' + l.conversion_rate.toFixed(1) + '%</td></tr>';
+        html += '<tr><td>Daily Sales</td><td class="old">N/A</td><td class="new">' + l.daily_sales.toFixed(2) + '</td></tr>';
+        html += '<tr><td>Weekly Sales</td><td class="old">N/A</td><td class="new">' + l.weekly_sales.toFixed(1) + '</td></tr>';
+        html += '<tr><td>Monthly Sales</td><td class="old">' + oldMonthlySales + '</td><td class="new">' + l.monthly_sales.toFixed(1) + '</td></tr>';
+        html += '<tr><td>Monthly Revenue</td><td class="old">$' + oldRevenue.toFixed(2) + '</td><td class="new">$' + l.revenue_estimate.toFixed(2) + '</td></tr>';
+        html += '<tr><td>Total Revenue</td><td class="old">$' + ((l.price||0)*(l.reviews||0)).toFixed(2) + '</td><td class="new">$' + l.total_revenue.toFixed(2) + '</td></tr>';
+        var confCls = 'conf-' + l.confidence;
+        html += '<tr><td>Confidence</td><td class="old">-</td><td class="new"><span class="' + confCls + '">' + l.confidence.toUpperCase() + '</span></td></tr>';
+        html += '<tr><td>Views Source</td><td class="old">N/A</td><td class="src">' + (l.views_source || 'N/A') + '</td></tr>';
+        html += '<tr><td>Age Source</td><td class="old">N/A</td><td class="src">' + (l.listing_age_source || 'N/A (unknown)') + '</td></tr>';
+        html += '<tr><td>Listing Age</td><td class="old">N/A</td><td class="new">' + (l.listing_age_label || 'N/A') + '</td></tr>';
+        html += '</table>';
+      }
+
+      out.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

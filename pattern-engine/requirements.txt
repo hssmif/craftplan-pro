@@ -1,0 +1,11 @@
+# Pinned for Python 3.9 compatibility. Bump when Python is upgraded.
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+python-multipart==0.0.9
+pillow==10.2.0
+numpy==1.26.4
+scikit-learn==1.4.2
+scikit-image==0.22.0
+imagequant==1.1.5
+reportlab>=4.0.0
+pydantic==2.6.4

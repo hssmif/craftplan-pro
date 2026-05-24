@@ -1,0 +1,51 @@
+{
+  "name": "craftplan-digital",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n next,python -c blue,green \"npm:dev:next\" \"npm:dev:py\"",
+    "dev:next": "next dev --port 3461",
+    "dev:py": "cd pattern-engine && .venv/bin/uvicorn main:app --reload --port 8000",
+    "dev:solo": "next dev --port 3461",
+    "setup:py": "cd pattern-engine && python3 -m venv .venv && .venv/bin/pip install --upgrade pip && .venv/bin/pip install -r requirements.txt",
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 next build",
+    "start": "next start",
+    "lint": "eslint",
+    "ext:build": "node src/extension/build.mjs",
+    "ext:watch": "node src/extension/build.mjs --watch"
+  },
+  "dependencies": {
+    "@notionhq/client": "^5.9.0",
+    "better-sqlite3": "^12.6.2",
+    "canvas-confetti": "^1.9.4",
+    "docx": "^9.6.1",
+    "exceljs": "^4.4.0",
+    "googleapis": "^171.4.0",
+    "jspdf": "^4.2.0",
+    "jspdf-autotable": "^5.0.7",
+    "jszip": "^3.10.1",
+    "next": "16.1.6",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38",
+    "playwright": "^1.60.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "sharp": "^0.34.5",
+    "zustand": "^5.0.11"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/chrome": "^0.1.37",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.27.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
