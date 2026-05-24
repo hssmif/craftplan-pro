@@ -2,6 +2,19 @@
 
 Discover trending keywords, analyze best-selling listings, and build your Etsy SEO strategy directly from your browser. No API keys, no accounts, no external services — everything runs locally.
 
+## Extension Role
+
+This is the **ListingView / v1** browser extension. It is the original Etsy page scanner and publishing helper for CraftPlan Pro, and it is still needed.
+
+Use this extension for:
+
+- Scanning Etsy search, listing, and shop pages
+- Powering research, radar, and opportunity workflows from live Etsy pages
+- Handling external `PING`, `LIST_ON_ETSY`, and listing progress messages from the CraftPlan app
+- Filling Etsy listing forms through the included Etsy form-filler
+
+Do not delete this folder just because `src/extension/` also exists. The two extensions cover different Etsy surfaces and app workflows.
+
 ## Features
 
 - **Page Detection** — Automatically detects search results, listing pages, and shop pages on Etsy

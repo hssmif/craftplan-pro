@@ -71,6 +71,7 @@ public/extension/dist/
 data/agent-command-center.json
 data/strategist-chat.json
 .claude/
+etsy-keyword-research/.claude/
 
 # === logs, backups, test scratch ===
 logs/
@@ -89,6 +90,7 @@ test-chick.png
 
 # === macOS / editor ===
 .DS_Store
+etsy-keyword-research/.DS_Store
 .idea/
 .vscode/*
 !.vscode/extensions.json

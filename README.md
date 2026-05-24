@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Browser Extensions
+
+This repo contains two browser extensions because they support different Etsy workflows:
+
+- [ListingView / v1](etsy-keyword-research/README.md) scans Etsy search, listing, and shop pages and supports the Etsy listing form-filler.
+- [CraftPlan Research / v2](src/extension/README.md) scans Etsy Marketplace Insights pages and feeds research freshness signals into the app.
+
 ## Getting Started
 
 First, run the development server:
