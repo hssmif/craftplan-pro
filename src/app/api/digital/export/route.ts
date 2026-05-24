@@ -10,6 +10,9 @@ import { readAssetBuffer, listAssets } from "@/lib/digital-asset-storage";
 import { buildListingText, buildMetadataJson } from "@/lib/digital-export-utils";
 import type { DigitalProduct } from "@/types/digital-product";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 // ── POST: Generate ZIP export ────────────────────────────────
 
 export async function POST(req: NextRequest) {
