@@ -494,9 +494,19 @@ function initSchema(db: Database.Database) {
 
   // Safe column additions for existing tables
   const addCol = (table: string, column: string, definition: string) => {
-    const cols = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
-    if (!cols.some(c => c.name === column)) {
-      db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+    const hasColumn = () => {
+      const cols = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+      return cols.some(c => c.name === column);
+    };
+    if (!hasColumn()) {
+      try {
+        db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+      } catch (err) {
+        if (err instanceof Error && /duplicate column name/i.test(err.message) && hasColumn()) {
+          return;
+        }
+        throw err;
+      }
     }
   };
   addCol('tracked_listings', 'scan_run_id', 'INTEGER REFERENCES scan_runs(id)');
