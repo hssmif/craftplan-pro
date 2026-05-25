@@ -1,65 +1,88 @@
 <!--
 Use this template for every PR opened by Claude Code, Codex, or a human.
-Sections marked Required must be filled. Sections marked Optional can be removed if not applicable.
+Required fields must be filled. Optional sections can be deleted if not applicable.
 -->
 
 ## Summary
 <!-- Required. 2–5 sentences. What changed and why. Plain English, no code. -->
 
-## Related Task
-<!-- Required. Task ID from AI_SYSTEM/TASK_LOG.md (e.g. T-20260523-01) and link to the originating issue if any. -->
-- Task ID: `T-YYYYMMDD-NN`
-- Issue: #
+## Linked issue
+<!-- Required. Use "Closes #N" so the issue closes on merge. -->
+Closes #
 
-## Agent Used
-<!-- Required. One of: claude-code, codex, human. If an agent assisted a human, list both. -->
+## Stage
+<!-- Required. Reflects the current label state when this PR was opened. -->
+- [ ] `stage:implementing` — Codex is producing code (CI may still be running)
+- [ ] `stage:review` — CI green, awaiting Claude review
+- [ ] `stage:fixing` — addressing review comments
+- [ ] `stage:ready-to-merge` — Claude approved
+
+## Agent used
+<!-- Required. One of: claude-code, codex, human. -->
 - [ ] claude-code
 - [ ] codex
 - [ ] human
 
 ## Branch
-<!-- Required. Branch this PR is from. Should match the task. -->
-`ai/<agent>/<slug>`
+<!-- Auto-populated by git; sanity check it matches the issue's branch field. -->
+`ai/<agent>/<slug>` or `chore/<slug>`
 
-## Files Changed
-<!-- Required. Compact list. Use `git diff --stat` output or summarize by area. -->
+## Files changed
+<!-- Required. Output of `git diff --stat`, or a one-paragraph summary by area. -->
 ```
 <N> files changed
 <path>                          +<added>  -<removed>
 ```
 
-## Tests Run
-<!-- Required. Exact commands and results. Mark skipped checks with a reason. -->
-| Command | Result | Notes |
-|---|---|---|
-| `pnpm typecheck` |  |  |
-| `pnpm lint` |  |  |
-| `pnpm test -- <path>` |  |  |
-| Manual: <steps> |  |  |
+## Tests run
+<!-- Required. Mark each. Skipped checks need a one-line reason. -->
+- [ ] CI: `typecheck` passed
+- [ ] CI: `lint` passed
+- [ ] CI: `build` passed
+- [ ] Manual smoke: <describe steps + result>
+- [ ] gitleaks: 0 findings (required if PR adds new files outside `AI_SYSTEM/`, `.github/`, or `*.md`)
 
-## Screenshots
-<!-- Optional. Required for any user-facing UI change. Before/after if relevant. -->
+## Risk level
+<!-- Required. Pick one — and apply the matching label. -->
+- [ ] **`risk:low`** — docs, tests-only, isolated bug fix, no shared utilities touched
+- [ ] **`risk:medium`** — single-area feature, touches shared utilities or one API route
+- [ ] **`risk:high`** — cross-cutting change, schema change, auth/payment flow, external API integration
 
-## Risk Level
-<!-- Required. Pick one. -->
-- [ ] **low** — docs, tests-only, isolated bug fix, no shared utilities touched
-- [ ] **medium** — single-area feature, touches shared utilities or one API route
-- [ ] **high** — cross-cutting change, schema change, auth/payment flow, external API integration
-
-### Risk Notes
+### Risk notes
 <!-- Required if risk is medium or high. What could go wrong, what to watch in review. -->
 
-## Checklist
-- [ ] Stayed inside the task's `Files Allowed to Edit` list
-- [ ] No secrets, env files, lockfiles, CI config, or `next.config.ts` touched (unless task required it)
-- [ ] No `main` pushes; branch is `ai/<agent>/<slug>` or a human topic branch
-- [ ] `AI_SYSTEM/TASK_LOG.md` updated for this task
-- [ ] PR description follows `AI_SYSTEM/AGENT_REPORT_TEMPLATE.md` for agent-authored PRs
-- [ ] No drive-by refactors; scope matches the task
+## Screenshots
+<!-- Required for any user-facing UI change. Before/after if relevant. -->
 
-## Recommended Next Step
-<!-- Required. What should happen after this PR. Examples:
-- "Claude review requested"
-- "Operator manual smoke test on /research before merge"
-- "None — ready to merge"
+## Task log update needed?
+<!-- After merge, `.github/workflows/task-log-on-merge.yml` posts a suggested
+     AI_SYSTEM/TASK_LOG.md row as a comment. Mark whether the operator (or Codex
+     via prompt 05) should append it. -->
+- [ ] Yes — append the bot-suggested row to `AI_SYSTEM/TASK_LOG.md` after merge
+- [ ] No — administrative PR, skip log
+
+## Checklist
+- [ ] Stayed inside the linked issue's `Files allowed to edit` list
+- [ ] No secrets, env files, lockfiles, CI config, or `next.config.ts` touched (unless task explicitly required)
+- [ ] No drive-by refactors; scope matches the task
+- [ ] No new dependencies (or: dependency added is named in the approved plan)
+- [ ] Issue labels updated: `stage:*`, `agent:*` reflect the next actor
+
+## Recommended next step
+<!-- Required. What should happen after this PR.
+     Examples:
+     - "Claude review requested — apply stage:review + agent:claude"
+     - "Operator: smoke test /research before merging"
+     - "Ready to merge — apply stage:ready-to-merge"
 -->
+
+<!-- ─────────────────────────────────────────────────────────────────
+     Workflow block (machine-readable; do not delete or edit comments).
+     The task-log-on-merge workflow parses this to build the TASK_LOG row.
+     Leave a field blank if it doesn't apply.
+     ───────────────────────────────────────────────────────────────── -->
+<!-- workflow:start -->
+task-id: T-YYYYMMDD-NN
+plan-source: (URL to approved-plan comment, or "trivial fix" or "—")
+agent: claude
+<!-- workflow:end -->

@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## AI Workflow
+
+This repo uses a Claude + Codex workflow for all non-trivial changes. Before filing your first task:
+
+- Read [`AI_SYSTEM/WORKFLOW.md`](AI_SYSTEM/WORKFLOW.md) for the end-to-end loop.
+- Read [`AI_SYSTEM/MANUAL_SETUP.md`](AI_SYSTEM/MANUAL_SETUP.md) for one-time label + Project board setup.
+- Use the prompt snippets in [`AI_SYSTEM/prompts/`](AI_SYSTEM/prompts/) — you never have to write a Claude or Codex prompt by hand.
+
+File new tasks via the issue templates on the [Issues](../../issues/new/choose) tab. Don't open blank issues.
+
 ## Browser Extensions
 
 This repo contains two browser extensions because they support different Etsy workflows:

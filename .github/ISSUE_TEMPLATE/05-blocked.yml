@@ -1,0 +1,65 @@
+name: "5. Blocked task"
+description: "An agent or operator hit a blocker mid-task. File this to track the unblock decision."
+title: "[blocked] "
+labels:
+  - "stage:blocked"
+  - "agent:human"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        File this when an agent stops mid-task and needs operator input to continue, or when
+        an operator decision is blocking a task from advancing. The task itself stays open;
+        this issue tracks the decision needed to unblock it.
+
+  - type: input
+    id: blocked_task
+    attributes:
+      label: Blocked Task ID or PR
+      description: "Link to the task issue, PR, or Task ID being blocked."
+      placeholder: "#42 / PR #15 / T-20260525-02"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: blocker_type
+    attributes:
+      label: Blocker type
+      options:
+        - "Plan vs code mismatch — plan turned out to be wrong on contact"
+        - "Scope creep — task is growing past ~300 LOC"
+        - "Missing approval — operator hasn't approved the plan"
+        - "Missing credential / API key — operator must enter"
+        - "Forbidden file — change requires touching a forbidden path"
+        - "Cross-agent collision — another agent is touching the same files"
+        - "External dependency — waiting on third-party (Etsy/Printful/etc.)"
+        - "Failing test on main — unrelated breakage discovered"
+        - "Other (describe below)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened
+      description: Plain English. What the agent was doing, what it hit, why it stopped.
+    validations:
+      required: true
+
+  - type: textarea
+    id: decision_needed
+    attributes:
+      label: Decision needed from operator
+      description: |
+        Be specific. "What should we do" is not a decision — "Should I expand the
+        forbidden-files list to include `next.config.ts`?" is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: Options the operator can pick (if you have them)
+      description: List 2-4 paths forward, each with trade-offs.
+    validations:
+      required: false

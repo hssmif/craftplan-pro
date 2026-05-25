@@ -1,0 +1,66 @@
+name: "1. Rough task"
+description: "Capture a rough idea or request. Claude will scope it before any code work happens."
+title: "[rough] "
+labels:
+  - "stage:rough"
+  - "agent:claude"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when you have an idea but haven't scoped it yet. Claude will read this issue,
+        produce a plan, and re-file (or comment) a properly-scoped task per the templates in
+        `AI_SYSTEM/`. This is the most common entry point.
+
+        After filing: apply one `area:*` label, adjust risk if needed, then paste
+        `AI_SYSTEM/prompts/01-rough-to-claude-plan.md` into Claude Code with this issue URL.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What do you want?
+      description: |
+        Plain English. No need for prompt-style structure — Claude turns this into a scoped task.
+        Include what's annoying you, what success looks like, and anything you've already tried.
+      placeholder: |
+        e.g. "The Etsy tag generator sometimes cuts tags at 19 chars instead of 20.
+        I think it's in src/lib/listing-optimizer.ts but not sure. Fix it."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Which part of the app?
+      description: Best guess. Claude can re-classify.
+      options:
+        - frontend (UI / pages / components)
+        - backend (API routes / lib)
+        - extension (browser extensions)
+        - pattern-engine (Python)
+        - cross-stitch (cross-stitch flow)
+        - pod (POD / Etsy / Printful)
+        - research (research / radar / opportunities)
+        - infra (CI / config / build)
+        - docs (AI_SYSTEM / READMEs)
+        - not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - low — nice to have
+        - medium — should do soon
+        - high — blocking or revenue-affecting
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: How will you know it's done? (optional)
+      description: Skip if you don't know yet — Claude will figure out acceptance criteria during scoping.
+      placeholder: "e.g. Etsy tags always render at 20 chars when the source phrase is 20 chars or longer."

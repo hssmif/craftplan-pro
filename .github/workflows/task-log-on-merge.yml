@@ -1,0 +1,110 @@
+name: TASK_LOG row on merge
+
+# Runs when a PR is merged into main. Parses the merged PR for Task ID,
+# stage, area, and risk labels, plus the workflow-block in the body, and
+# posts a ready-to-paste TASK_LOG.md row as a comment on the merged PR.
+#
+# Why a comment, not an auto-commit:
+#   - main is branch-protected; the bot would need bypass permission to push directly.
+#   - Auto-commits to main from Actions are easy to misconfigure into infinite loops.
+#   - A comment is reviewable, idempotent, and never destructive.
+#
+# How the operator uses the output:
+#   1. Open the merged PR after merge.
+#   2. Find the comment titled "TASK_LOG row" from github-actions[bot].
+#   3. Copy the row.
+#   4. Append to AI_SYSTEM/TASK_LOG.md in a tiny follow-up PR
+#      (or use AI_SYSTEM/prompts/05-merge-to-task-log.md to have Codex do it).
+#
+# This is intentionally manual. See AI_SYSTEM/WORKFLOW.md for rationale.
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  pull-requests: write   # to comment on the merged PR
+  contents: read         # to read PR body / labels
+
+jobs:
+  build-task-log-row:
+    # Only runs when the PR was actually merged (not just closed).
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build TASK_LOG row
+        id: row
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+            const labels = pr.labels.map(l => l.name);
+
+            // ── Parse workflow block ────────────────────────────────────
+            // The PR body is expected to contain (per pull_request_template.md):
+            //   <!-- workflow:start -->
+            //   task-id: T-YYYYMMDD-NN
+            //   plan-source: <url or none>
+            //   agent: claude|codex|human
+            //   <!-- workflow:end -->
+            const block = body.match(/<!-- workflow:start -->([\s\S]*?)<!-- workflow:end -->/);
+            const parsed = {};
+            if (block) {
+              for (const line of block[1].split('\n')) {
+                const m = line.match(/^\s*([\w-]+)\s*:\s*(.+?)\s*$/);
+                if (m) parsed[m[1]] = m[2];
+              }
+            }
+
+            // ── Field derivation ────────────────────────────────────────
+            const taskId  = parsed['task-id']     || `T-UNKNOWN-PR${pr.number}`;
+            const agent   = parsed['agent']       || labels.find(l => l.startsWith('agent:'))?.slice(6) || 'unknown';
+            const planSrc = parsed['plan-source'] || '—';
+            const area    = labels.filter(l => l.startsWith('area:')).map(l => l.slice(5)).join('+') || '—';
+            const risk    = labels.find(l => l.startsWith('risk:'))?.slice(5) || '—';
+            const date    = (pr.merged_at || new Date().toISOString()).slice(0, 10);
+            const summary = pr.title.replace(/\|/g, '\\|').slice(0, 80);
+            const branch  = pr.head.ref;
+            const tests   = '—';  // CI status reflects this; operator can hand-fill if needed
+
+            // ── Markdown row (matches TASK_LOG.md schema) ────────────────
+            const row = `| ${taskId} | ${date} | ${agent} | \`${branch}\` | merged | (see PR) | ${summary} | ${tests} | ${risk} | — |`;
+
+            // ── Comment body ────────────────────────────────────────────
+            const commentBody = [
+              '### TASK_LOG row',
+              '',
+              `Paste the following line into \`AI_SYSTEM/TASK_LOG.md\` after the existing rows:`,
+              '',
+              '```markdown',
+              row,
+              '```',
+              '',
+              '**Parsed from this PR:**',
+              `- Task ID: \`${taskId}\``,
+              `- Agent: \`${agent}\``,
+              `- Plan source: ${planSrc}`,
+              `- Branch: \`${branch}\``,
+              `- Area: \`${area}\``,
+              `- Risk: \`${risk}\``,
+              `- Merged: ${date}`,
+              '',
+              '**Why not auto-committed:** `main` is branch-protected. Appending this row requires its own PR.',
+              'See `AI_SYSTEM/prompts/05-merge-to-task-log.md` to have Codex open that PR, or do it by hand.',
+              '',
+              '<sub>Posted by `.github/workflows/task-log-on-merge.yml`.</sub>',
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: commentBody,
+            });
+
+            core.summary
+              .addHeading('TASK_LOG row built', 2)
+              .addRaw(`Posted suggested row for ${taskId} as a comment on PR #${pr.number}.`)
+              .write();
