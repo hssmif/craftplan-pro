@@ -715,15 +715,17 @@ function ExtensionSection() {
             className="w-full px-3 py-2.5 border border-white/[0.1] bg-[var(--bg-surface)] rounded-lg text-sm font-mono text-white placeholder-[var(--text-muted)]"
           />
           <p className="text-[10px] text-[var(--text-muted)] mt-1">
-            Find your Extension ID at <code className="bg-white/[0.08] px-1 py-0.5 rounded">chrome://extensions</code> after installing the CraftPlan POD Scanner extension.
+            Find your Extension ID at <code className="bg-white/[0.08] px-1 py-0.5 rounded">chrome://extensions</code> after installing either CraftPlan extension (see Setup Guide below).
           </p>
         </div>
 
         <div className="bg-white/[0.04] border border-white/[0.08] rounded-lg p-4 space-y-2">
           <p className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Setup Guide</p>
           <div className="space-y-1.5">
-            <p className="text-xs text-[var(--text-secondary)] flex gap-2"><span className="font-bold text-[var(--text-muted)]">1.</span> Install the CraftPlan POD Scanner Chrome extension</p>
-            <p className="text-xs text-[var(--text-secondary)] flex gap-2"><span className="font-bold text-[var(--text-muted)]">2.</span> Copy the Extension ID from <code className="bg-white/[0.08] px-1 py-0.5 rounded text-[11px] font-mono">chrome://extensions</code></p>
+            <p className="text-xs text-[var(--text-secondary)] flex gap-2"><span className="font-bold text-[var(--text-muted)]">1.</span> Install the CraftPlan extension that matches your workflow:</p>
+            <p className="text-xs text-[var(--text-secondary)] flex gap-2"><span className="font-bold text-[var(--text-muted)]">&bull;</span> ListingView (v1) — for the Etsy listing automation flow (paste this one's ID here)</p>
+            <p className="text-xs text-[var(--text-secondary)] flex gap-2"><span className="font-bold text-[var(--text-muted)]">&bull;</span> CraftPlan Research (v2) — for Marketplace Insights research (doesn't use this field today)</p>
+            <p className="text-xs text-[var(--text-secondary)] flex gap-2"><span className="font-bold text-[var(--text-muted)]">2.</span> Copy the matching Extension ID from <code className="bg-white/[0.08] px-1 py-0.5 rounded text-[11px] font-mono">chrome://extensions</code></p>
             <p className="text-xs text-[var(--text-secondary)] flex gap-2"><span className="font-bold text-[var(--text-muted)]">3.</span> Paste it in the Extension ID field above</p>
             <p className="text-xs text-[var(--text-secondary)] flex gap-2"><span className="font-bold text-[var(--text-muted)]">4.</span> In the extension popup &rarr; Settings, set CraftPlan URL to: <code className="bg-white/[0.08] px-1.5 py-0.5 rounded text-[11px] font-mono text-[var(--text-primary)]">{settings.craftplanUrl}</code></p>
           </div>
