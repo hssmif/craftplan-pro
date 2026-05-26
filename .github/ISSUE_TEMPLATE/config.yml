@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "AI workflow docs"
+    url: "https://github.com/hssmif/craftplan-pro/blob/main/AI_SYSTEM/WORKFLOW.md"
+    about: "Read the full AI workflow before filing your first task."

@@ -1,0 +1,116 @@
+name: "2. Claude planning task (scoped)"
+description: "A scoped analysis/plan/review task for Claude Code. Use when you already know the scope."
+title: "[claude-plan] "
+labels:
+  - "stage:scoped"
+  - "agent:claude"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template mirrors `AI_SYSTEM/CLAUDE_TASK_TEMPLATE.md` field-for-field, so the issue
+        body IS the prompt — no translation step. Paste `AI_SYSTEM/prompts/01-rough-to-claude-plan.md`
+        (or `03-codex-pr-to-claude-review.md` for reviews) into Claude Code with this issue URL.
+
+        Use this template when you already have enough scope to skip the rough-idea step.
+
+  - type: input
+    id: task_id
+    attributes:
+      label: Task ID
+      description: "Format: T-YYYYMMDD-NN. Increment NN if you file multiple today."
+      placeholder: "T-20260525-01"
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One sentence. What does "done" look like for this analysis/plan?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: |
+        Prior task IDs, related issues/PRs, recent commits, design constraints.
+        Reference `AI_SYSTEM/MASTER_CONTEXT.md` is assumed loaded — don't repeat what's there.
+    validations:
+      required: false
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What's in scope and what's explicitly out of scope.
+    validations:
+      required: true
+
+  - type: textarea
+    id: files_inspect
+    attributes:
+      label: Files to inspect
+      description: One per line. Globs only for genuinely repo-wide tasks.
+      placeholder: |
+        src/lib/etsy-client.ts
+        src/app/api/etsy/generate-listing/route.ts
+    validations:
+      required: true
+
+  - type: textarea
+    id: required_output
+    attributes:
+      label: Required output
+      description: |
+        For analysis/plan: findings, options, recommendation, implementation plan, risk assessment.
+        For review: verdict, findings by severity, regression risk, UX risk.
+      value: |
+        - Findings (with file:line refs)
+        - Options & trade-offs
+        - Recommendation
+        - Implementation plan (ordered steps, target files, test strategy)
+        - Risk assessment
+        - Open questions for the operator
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Surface area
+      options:
+        - frontend
+        - backend
+        - extension
+        - pattern-engine
+        - cross-stitch
+        - pod
+        - research
+        - infra
+        - docs
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk level
+      options:
+        - "low — analysis/plan only, no code change"
+        - "medium — plan will touch shared utilities or single area"
+        - "high — cross-cutting, schema, auth/payment, external API"
+    validations:
+      required: true
+
+  - type: textarea
+    id: forbidden
+    attributes:
+      label: Files forbidden (in addition to defaults)
+      description: |
+        Always forbidden: .env*, secrets/, package.json, lockfiles, .github/workflows/*,
+        next.config.ts, data/*.db*. List anything else here (e.g. files another open task is touching).
+    validations:
+      required: false

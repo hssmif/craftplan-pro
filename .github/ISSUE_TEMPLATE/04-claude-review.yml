@@ -1,0 +1,58 @@
+name: "4. Claude review task"
+description: "Ask Claude to review a PR. Use after Codex opens a PR and CI passes."
+title: "[claude-review] PR #"
+labels:
+  - "stage:review"
+  - "agent:claude"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to formally request a Claude review of a PR. Paste
+        `AI_SYSTEM/prompts/03-codex-pr-to-claude-review.md` into Claude Code with the PR URL.
+
+        Lighter-weight alternative: just comment `@me review PR #N` on the PR itself and paste
+        the snippet — no issue needed. Use this template when you want a tracked review task.
+
+  - type: input
+    id: pr_url
+    attributes:
+      label: PR URL
+      placeholder: "https://github.com/hssmif/craftplan-pro/pull/N"
+    validations:
+      required: true
+
+  - type: input
+    id: task_id
+    attributes:
+      label: Related implementation Task ID
+      description: "From the originating Codex task. Format: T-YYYYMMDD-NN."
+      placeholder: "T-20260525-02"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: focus
+    attributes:
+      label: Focus areas
+      description: Pick what Claude should weight heavily in this review.
+      options:
+        - label: Correctness — does it do what it claims?
+        - label: Architecture fit — aligned with existing patterns?
+        - label: Regression risk — what adjacent flows could break?
+        - label: UI/UX — clarity, accessibility, error states, mobile
+        - label: Security — auth, input validation, secret handling
+        - label: Edge cases — empty states, long inputs, network failure, auth-expired
+        - label: Performance — extra API calls, larger payloads, render cost
+    validations:
+      required: true
+
+  - type: textarea
+    id: must_check
+    attributes:
+      label: Must-check items (optional)
+      description: |
+        Anything specific the operator wants verified. Quote review concerns, link prior bugs,
+        flag files the reviewer should look at first.
+    validations:
+      required: false

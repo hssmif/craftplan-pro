@@ -1,0 +1,112 @@
+name: "3. Codex implementation task"
+description: "A scoped implementation task for Codex. Requires an approved plan (or a genuinely trivial fix)."
+title: "[codex] "
+labels:
+  - "stage:scoped"
+  - "agent:codex"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template mirrors `AI_SYSTEM/CODEX_TASK_TEMPLATE.md`. Use after a Claude plan has been
+        approved, or for genuinely trivial fixes (typo, single-line fix, lint cleanup).
+
+        Paste `AI_SYSTEM/prompts/02-claude-plan-to-codex-implement.md` into Codex with this issue URL.
+
+  - type: input
+    id: task_id
+    attributes:
+      label: Task ID
+      description: "Format: T-YYYYMMDD-NN."
+      placeholder: "T-20260525-02"
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One sentence. If you can't state it in one sentence, the task is too large — split it.
+    validations:
+      required: true
+
+  - type: input
+    id: plan_source
+    attributes:
+      label: Approved plan source
+      description: |
+        Link to the Claude planning issue/PR/comment containing the approved plan.
+        If this is a trivial fix with no plan, write: "trivial fix per operator request" and quote the request below.
+      placeholder: "#42 (Claude plan approved 2026-05-25)"
+    validations:
+      required: true
+
+  - type: input
+    id: branch
+    attributes:
+      label: Branch name
+      description: "Must start with ai/codex/ or fix/ or chore/. Codex creates this branch."
+      placeholder: "ai/codex/etsy-tag-truncation"
+    validations:
+      required: true
+
+  - type: textarea
+    id: files_allowed
+    attributes:
+      label: Files allowed to edit
+      description: Explicit list. No globs unless the task is genuinely repo-wide.
+      placeholder: |
+        src/lib/listing-optimizer.ts
+        src/app/api/etsy/generate-listing/route.ts
+    validations:
+      required: true
+
+  - type: textarea
+    id: forbidden
+    attributes:
+      label: Files forbidden (in addition to defaults)
+      description: |
+        Always forbidden: .env*, secrets/, package.json, lockfiles, .github/workflows/*,
+        next.config.ts, data/*.db*, any file another open task is touching.
+    validations:
+      required: false
+
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests to run
+      description: Exact commands and manual steps. All must pass before opening the PR.
+      value: |
+        - npm run lint
+        - npm run build (only if production paths touched)
+        - Manual: <describe>
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Surface area
+      options:
+        - frontend
+        - backend
+        - extension
+        - pattern-engine
+        - cross-stitch
+        - pod
+        - research
+        - infra
+        - docs
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk level
+      options:
+        - "low — isolated fix, no shared utilities"
+        - "medium — single-area feature or shared utility touch"
+        - "high — cross-cutting, schema, auth/payment, external API"
+    validations:
+      required: true
